@@ -18,8 +18,8 @@ using namespace std;
 
 #include "aghException.h"
 #include "aghContainer.h"
-#include "aghTree.h"
 #include "aghVector.h"
+#include "aghTree.h"
 // -------------------------------
 
 #endif

@@ -22,9 +22,9 @@ class aghNode
 {
 private:
     T data; ///< dane zapisane w wêŸle
-    aghNode<T>* parent; ///< wskaŸnik do wêz³a rodzica
-    aghNode<T>* left; ///< wskaŸnik do wêz³a po lewej
-    aghNode<T>* right; ///< wskaŸnik do wêz³a po prawej
+    aghNode<T>* parent = nullptr; ///< wskaŸnik do wêz³a rodzica
+    aghNode<T>* left = nullptr; ///< wskaŸnik do wêz³a po lewej
+    aghNode<T>* right = nullptr; ///< wskaŸnik do wêz³a po prawej
 
 public:
 
@@ -34,7 +34,7 @@ public:
     /// \brief Konstruktor parametrowy
     ///
     /// \param _data = wartoœæ, któr¹ przyjmie pole data
-    aghNode(T _data);
+    aghNode(T const &_data);
 
     /// \brief Destruktor
     ~aghNode();
@@ -85,18 +85,12 @@ public:
 template <class T>
 aghNode<T>::aghNode()
 {
-    parent = nullptr;
-    left = nullptr;
-    right = nullptr;
 }
 // ---------------------------------------------------------------
 
 template <class T>
-aghNode<T>::aghNode(T _data)
+aghNode<T>::aghNode(T const &_data)
 {
-    parent = nullptr;
-    left = nullptr;
-    right = nullptr;
     data = _data;
 }
 // ---------------------------------------------------------------
@@ -104,7 +98,6 @@ aghNode<T>::aghNode(T _data)
 template <class T>
 aghNode<T>::~aghNode()
 {
-
 }
 // ---------------------------------------------------------------
 

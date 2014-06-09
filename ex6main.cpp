@@ -57,6 +57,7 @@ int main(void)
     *c2 << 4 << 2+3 << -5 << 3;
     c2->remove(2);
 
+
     int ttab4[] = {-5, 0, 2, 3, 3, 4, 4, 5};
     bool t4 = c2->size() == 8;
     for(int i=0;t4 && i<8;i++)

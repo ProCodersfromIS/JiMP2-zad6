@@ -17,11 +17,11 @@
 * \class aghVector
 * \author Beata Gie³baga & Kamil Dawidów
 * \date 26.05.2014
-* \brief szablon klasy aghVector (pochodnej klasy aghContainer), opisuj¹cej obiekt - wektor, 
+* \brief szablon klasy aghVector (pochodnej klasy aghContainer), opisuj¹cej obiekt - wektor,
 */
 // -------------------------------------------------------------------------
 template <class T>
-class aghVector: public aghContainer<T>
+class aghVector : public aghContainer<T>
 {
 private:
     T* tab = nullptr; ///< wskaŸnik do pocz¹tku tablicy elementów
@@ -135,7 +135,7 @@ void aghVector<T>::editTable(int k, int n)
         for (int i = n; i < length; ++i)
             tab[i] = localtab[i + 1];
     }
-    
+
     delete[] localtab;
 }
 // --------------------------------------------------------------

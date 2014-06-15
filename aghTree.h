@@ -34,9 +34,15 @@ private:
     /// \return wskaŸnik do wêz³a
     aghNode<T>* getNodePtr(int n) const;
 
-    aghNode<T>* findMinNode(aghNode<T>* temp);
+    /// \brief Metoda usuwa dany wêze³
+    ///
+    /// \param target - wskaŸnik do wêz³a
+    void deleteNode(aghNode<T>* target);
 
-    aghNode<T>* findReplacer(aghNode<T>* temp);
+    /// \brief Metoda znajduje potomka prawego dziecka o najmniejszej wartoœci
+    ///
+    /// \return wskaŸnik do szukanego wêz³a
+    aghNode<T>* getReplacer(aghNode<T>* temp);
 
 
 public:
@@ -97,75 +103,149 @@ public:
 template <class T>
 aghNode<T>* aghTree<T>::getNodePtr(int n) const
 {
-    aghNode<T>* result = nullptr;
     aghNode<T>* it = root;
-    aghNode<T>* visited = nullptr;
+    aghNode<T>* prev = nullptr;
     int counter = -1;
 
-    while (!result)
+    while (it)
     {
-        if (visited == it->getParent())
+        if (prev == it->getParent())
         {
-            visited = it;
+            prev = it;
             if (it->getLeft())
                 it = it->getLeft();
             else
             {
-                ++counter;
-                if (n == counter)
-                    result = it;
+                if (n == ++counter)
+                    break;
                 if (it->getRight())
                     it = it->getRight();
                 else
                     it = it->getParent();
             }
         }
-        else if (visited == it->getLeft())
+        else if (prev == it->getLeft())
         {
-            visited = it;
-            ++counter;
-            if (n == counter)
-                result = it;
+            prev = it;
+            if (n == ++counter)
+                break;
             if (it->getRight())
                 it = it->getRight();
             else
                 it = it->getParent();
         }
-        else //if (visited == it->getRight())
+        else
         {
-            visited = it;
+            prev = it;
             it = it->getParent();
         }
-    }
-    return result;
-}
-// ---------------------------------------------------------------
-
-template <class T>
-aghNode<T>* aghTree<T>::findMinNode(aghNode<T>* temp)
-{
-    aghNode<T>* it = temp;
-    if (!it)
-        return nullptr;
-    while (1)
-    {
-        if (it->getLeft())
-            it = it->getLeft();
-        else
-            break;
     }
     return it;
 }
 // ---------------------------------------------------------------
 
 template <class T>
-aghNode<T>* aghTree<T>::findReplacer(aghNode<T>* temp)
+void aghTree<T>::deleteNode(aghNode<T>* target)
 {
-    aghNode<T>* it temp->getRight();
+    
+    aghNode<T>* lChild = target->getLeft();
+    aghNode<T>* rChild = target->getRight();
+    aghNode<T>* parent = target->getParent();
+
+    //has no children
+    if (!lChild && !rChild)
+    {
+        //has parent
+        if (parent)
+        {
+            //is left child
+            if (parent->getLeft() == target)
+                parent->setLeft(nullptr);
+            //is right child
+            else
+                parent->setRight(nullptr);
+        }
+        //no parent
+        else
+            root = nullptr;
+    }
+    //has one children
+    else if ((lChild && !rChild) || (!lChild && rChild))
+    {
+        //has left child
+        if (lChild && !rChild)
+        {
+            //has parent
+            if (parent)
+            {
+                lChild->setParent(parent);
+                //is left child
+                if (parent->getLeft() == target)
+                    parent->setLeft(lChild);
+                //is right child
+                else
+                    parent->setRight(lChild);
+            }
+            //no parent
+            else
+            {
+                root = lChild;
+                lChild->setParent(nullptr);
+            }
+        }
+        //has right child
+        else if (!lChild && rChild)
+        {
+            //has parent
+            if (parent)
+            {
+                rChild->setParent(parent);
+                //is left child
+                if (parent->getLeft() == target)
+                    parent->setLeft(rChild);
+                //is right child
+                else
+                    parent->setRight(rChild);
+            }
+            //no parent
+            else
+            {
+                root = rChild;
+                rChild->setParent(nullptr);
+            }
+        }
+    }
+    //has two children
+    else if (lChild && rChild)
+    {
+        aghNode<T>* replacer = this->getReplacer(target);
+        target->setData(replacer->getData());
+        this->deleteNode(replacer);
+    }
+
+    --amount;
+    delete target;
+}
+// ---------------------------------------------------------------
+
+template <class T>
+aghNode<T>* aghTree<T>::getReplacer(aghNode<T>* temp)
+{
+    aghNode<T>* it = temp->getRight();
     if (!it)
         return nullptr;
-    else
-        return this->findMinNode(it);
+    if (it->getRight())
+    {
+        it = it->getRight();
+        while (1)
+        {
+            if (it->getLeft())
+                it = it->getLeft();
+            else
+                break;
+        }
+    }
+    return it;
 }
 // ---------------------------------------------------------------
 
@@ -253,6 +333,10 @@ bool aghTree<T>::insert(int n, T const& element)
 template <class T>
 bool aghTree<T>::remove(int n)
 {
+    if (this->invalidIndex(n))
+        return false;
+
+    this->deleteNode(this->getNodePtr(n));
     return true;
 }
 // ---------------------------------------------------------------

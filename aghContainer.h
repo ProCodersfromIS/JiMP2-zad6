@@ -210,10 +210,11 @@ bool aghContainer<T>::replace(int n, T const& element)
 {
     if (this->remove(n))
     {
-        if (this->insert(n, element))
-            return true;
+        this->insert(n, element);
+        return true;
     }
-    return false;
+    else
+        return false;
 }
 // -----------------------------------------------------------------------------
 
